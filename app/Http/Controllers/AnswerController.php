@@ -119,12 +119,31 @@ class AnswerController extends Controller
             
             // comprobamos que la pregunta asociada no tenga respuesta correcta
             if($request->escorrecta == 1) {
+                // OLD
+                // $exist = false;
+                // foreach($otherAnswers as $ans) {
+                //     if($ans->escorrecta == 1) $exist = true;
+                // }
+                // if($exist) {
+                //     return back()->withInput()->withErrors(['message' => 'The answer could not have two correct answers']);
+                // } else {
+                //     $answer->escorrecta = $request->escorrecta;
+                // }
+                
+                // Añadido
                 $exist = false;
+                $correct = null;
                 foreach($otherAnswers as $ans) {
-                    if($ans->escorrecta == 1) $exist = true;
+                    if($ans->escorrecta == 1) {
+                        $exist = true;
+                        $correct = $ans;
+                    }
                 }
                 if($exist) {
-                    return back()->withInput()->withErrors(['message' => 'The answer could not have two correct answers']);
+                    $correct->escorrecta = false;
+                    $correct->save();
+                    $answer->escorrecta = $request->escorrecta;
+                    //return back()->withInput()->withErrors(['message' => 'The answer could not have two correct answers']);
                 } else {
                     $answer->escorrecta = $request->escorrecta;
                 }

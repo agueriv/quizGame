@@ -37,6 +37,27 @@ class QuestionController extends Controller
             $question = new Question();
             // introducimos en el modelo los datos de la pregunta (name)
             $question->name = $request->name;
+            
+            // antes de guardar la pregunta comprobar si hay respuestas iguales
+            if($request->firstanswer == $request->secondanswer || $request->firstanswer == $request->thirdanswer 
+            || $request->firstanswer == $request->fourthanswer ) {
+                return back()->withInput()->withErrors(['message' => 'The question cannot have several equal answers']);
+            
+                
+            } else if($request->secondanswer == $request->firstanswer || $request->secondanswer == $request->thirdanswer 
+            || $request->secondanswer == $request->fourthanswer ) {
+                return back()->withInput()->withErrors(['message' => 'The question cannot have several equal answers']);
+            
+                
+            } else if($request->thirdanswer == $request->firstanswer || $request->thirdanswer == $request->secondanswer 
+            || $request->thirdanswer == $request->fourthanswer ) {
+                return back()->withInput()->withErrors(['message' => 'The question cannot have several equal answers']);
+            
+                
+            } else if($request->fourthanswer == $request->firstanswer || $request->fourthanswer == $request->secondanswer 
+            || $request->fourthanswer == $request->thirdanswer ) {
+                return back()->withInput()->withErrors(['message' => 'The question cannot have several equal answers']);
+            }
             // guardamos y creamos la pregunta
             $result = $question->save();
             
@@ -60,6 +81,7 @@ class QuestionController extends Controller
                 $answer2->name = $request->secondanswer;
                 $answer3->name = $request->thirdanswer;
                 $answer4->name = $request->fourthanswer;
+                
                 
                 // seleccionamos cuales son falsas y cual correcta
                 if($request->correctanswer == 1) {
